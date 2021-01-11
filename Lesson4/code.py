@@ -15,7 +15,7 @@ import constants
 
 def game_scene():
     # this function is the main game scene
-    
+
     # Image bank holds all image assets used
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
@@ -36,10 +36,10 @@ def game_scene():
     # 10x8 images of 16x16 wide images (only bottom row will show), (ground)
     background_2 = stage.Grid(image_bank_background, constants.SCREEN_GRID_X,
                               constants.SCREEN_GRID_Y)
-    
+
     # Ship sprite being displayed
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
-    
+
 
     # Creates a stage for the background
     # Sets frame rate to 60fps
@@ -72,7 +72,7 @@ def game_scene():
                 ship.move(0, ship.y)
         if keys & ugame.K_UP:
             # Moves down with constraints of the ceiling
-            if ship.y >= 0 + constants.SPRITE_SIZE:
+            if ship.y >= 0:
                 ship.move(ship.x, ship.y - constants.SPRITE_MOVEMENT_SPEED)
             else:
                 ship.move(ship.x, 0)
