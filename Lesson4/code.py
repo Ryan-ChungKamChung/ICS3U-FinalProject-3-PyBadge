@@ -40,7 +40,6 @@ def game_scene():
     # Ship sprite being displayed
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
 
-
     # Creates a stage for the background
     # Sets frame rate to 60fps
     game = stage.Stage(ugame.display, constants.FPS)
