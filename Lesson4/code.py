@@ -88,6 +88,7 @@ def game_scene():
         # Waits until refresh rate finishes
         game.tick()
 
+
 # Makes this file run as the main file of the program, and runs game_scene()
 if __name__ == "__main__":
     game_scene()
