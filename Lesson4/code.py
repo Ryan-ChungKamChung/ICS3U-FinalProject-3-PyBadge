@@ -2,7 +2,7 @@
 
 # Created by Ryan Chung Kam Chung
 # Created in January 2021
-# Setting background on the PyBadge
+# Constraining character on the screen
 
 
 # Libraries that will enable us to render and stage assets
