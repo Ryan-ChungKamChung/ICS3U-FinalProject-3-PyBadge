@@ -20,22 +20,17 @@ def game_scene():
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
 
-    # Sets background to the 0th image in the image bank (will be changed after)
-    # 10x7 images of 16x16 wide images (sky)
-    background_1 = stage.Grid(image_bank_background, constants.SCREEN_GRID_X,
-                              constants.SCREEN_GRID_Y - 1)
-
-    # With for loops, it chooses every 16x16 image and converts it to the 2nd
-    # image in the image bank, tile_picked
-    for x_location in range(constants.SCREEN_GRID_X):
-        for y_location in range(constants.SCREEN_GRID_Y - 1):
-            tile_picked = 2
-            background_1.tile(x_location, y_location, tile_picked)
-
     # Sets background to the 0th image in the image bank
-    # 10x8 images of 16x16 wide images (only bottom row will show), (ground)
-    background_2 = stage.Grid(image_bank_background, constants.SCREEN_GRID_X,
+    # 10x8 grid
+    background = stage.Grid(image_bank_background, constants.SCREEN_GRID_X,
                               constants.SCREEN_GRID_Y)
+
+    # Sets the floor as the 1st image in the image bank, the walls are still going
+    # to be the 0th image
+    for x_location in range(1, constants.SCREEN_GRID_X - 1):
+        for y_location in range(1, constants.SCREEN_GRID_Y - 1):
+            tile_picked = 1
+            background.tile(x_location, y_location, tile_picked)
 
     # Ship sprite being displayed
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
@@ -45,7 +40,7 @@ def game_scene():
     game = stage.Stage(ugame.display, constants.FPS)
 
     # Sets sprite layers and show up in order
-    game.layers = [ship] + [background_1] + [background_2]
+    game.layers = [ship] + [background]
 
     # Renders all sprites
     # Usually you should render background once per scene
