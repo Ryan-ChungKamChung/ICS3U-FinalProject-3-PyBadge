@@ -2,7 +2,7 @@
 
 # Created by Ryan Chung Kam Chung
 # Created in January 2021
-# Setting background on the PyBadge
+# Adding shooting and sound
 
 
 # Libraries that will enable us to render and stage assets
@@ -20,6 +20,18 @@ def game_scene():
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
 
+    # Buttons with state information
+    a_button = constants.button_state["button_up"]
+    b_button = constants.button_state["button_up"]
+    start_button = constants.button_state["button_up"]
+    select_button = constants.button_state["button_up"]
+
+    # get sound ready
+    pew_sound = open("pew.wav", 'rb')
+    sound = ugame.audio
+    sound.stop()
+    sound.mute(False)
+
     # Sets background to the 0th image in the image bank
     # 10x8 grid
     background = stage.Grid(image_bank_background, constants.SCREEN_GRID_X,
@@ -35,12 +47,21 @@ def game_scene():
     # Ship sprite being displayed
     ship = stage.Sprite(image_bank_sprites, 5, 75, 66)
 
+    # List of lasers
+    bullets = []
+    for bullets_number in range(constants.TOTAL_NUMBER_OF_BULLETS):
+        a_single_bullet = stage.Sprite(image_bank_sprites, 10,
+                                     constants.OFF_SCREEN_X,
+                                     constants.OFF_SCREEN_Y)
+        bullets.append(a_single_bullet)
+
+
     # Creates a stage for the background
     # Sets frame rate to 60fps
     game = stage.Stage(ugame.display, constants.FPS)
 
     # Sets sprite layers and show up in order
-    game.layers = [ship] + [background]
+    game.layers = bullets + [ship] + [background]
 
     # Renders all sprites
     # Usually you should render background once per scene
@@ -52,6 +73,17 @@ def game_scene():
         # User input
         keys = ugame.buttons.get_pressed()
 
+        # A button to fire
+        if keys & ugame.K_X != 0:
+            if a_button == constants.button_state["button_up"]:
+                a_button = constants.button_state["button_just_pressed"]
+            elif a_button == constants.button_state["button_just_pressed"]:
+                a_button = constants.button_state["button_still_pressed"]
+        else:
+            if a_button == constants.button_state["button_still_pressed"]:
+                a_button = constants.button_state["button_released"]
+            else:
+                a_button = constants.button_state["button_up"]
         if keys & ugame.K_RIGHT:
             # Move right with constraints of the right border
             if ship.x <= constants.SCREEN_X - 2 * constants.SPRITE_SIZE:
@@ -77,8 +109,28 @@ def game_scene():
             else:
                 ship.move(ship.x, constants.SCREEN_Y - 2 * constants.SPRITE_SIZE)
 
+        # Update Game Logic
+
+        # Shoot with sound
+        if a_button == constants.button_state["button_just_pressed"]:
+            for bullet_number in range(len(bullets)):
+                if bullets[bullet_number].x < 0:
+                    bullets[bullet_number].move(ship.x, ship.y)
+                    sound.play(pew_sound)
+                    break
+
+        # When bullets get shot, check if they are off the screen.
+        for bullet_number in range(len(bullets)):
+            if bullets[bullet_number].x > 0:
+                bullets[bullet_number].move(bullets[bullet_number].x,
+                                          bullets[bullet_number].y -
+                                          constants.BULLET_SPEED)
+                if bullets[bullet_number].y < constants.OFF_TOP_SCREEN:
+                    bullets[bullet_number].move(constants.OFF_SCREEN_X,
+                                              constants.OFF_SCREEN_Y)
+
         # Renders and redraws the ship
-        game.render_sprites([ship])
+        game.render_sprites(bullets + [ship])
         # Waits until refresh rate finishes
         game.tick()
 
