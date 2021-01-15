@@ -2,7 +2,7 @@
 
 # Created by Ryan Chung Kam Chung
 # Created in January 2021
-# Constraining character on the screen
+# Setting background on the PyBadge
 
 
 # Libraries that will enable us to render and stage assets
@@ -54,22 +54,22 @@ def game_scene():
 
         if keys & ugame.K_RIGHT:
             # Move right with constraints of the right border
-            if ship.x <= constants.SCREEN_X - constants.SPRITE_SIZE:
+            if ship.x <= constants.SCREEN_X - 2 * constants.SPRITE_SIZE:
                 ship.move(ship.x + constants.SPRITE_MOVEMENT_SPEED, ship.y)
             else:
-                ship.move(constants.SCREEN_X - constants.SPRITE_SIZE, ship.y)
+                ship.move(constants.SCREEN_X - 2 * constants.SPRITE_SIZE, ship.y)
         if keys & ugame.K_LEFT:
             # Move left with constraints of the left border
-            if ship.x >= 0:
+            if ship.x >= constants.SCREEN_X - 9 * constants.SPRITE_SIZE:
                 ship.move(ship.x - constants.SPRITE_MOVEMENT_SPEED, ship.y)
             else:
-                ship.move(0, ship.y)
+                ship.move(constants.SPRITE_SIZE, ship.y)
         if keys & ugame.K_UP:
             # Moves down with constraints of the ceiling
-            if ship.y >= 0:
+            if ship.y >= constants.SPRITE_SIZE:
                 ship.move(ship.x, ship.y - constants.SPRITE_MOVEMENT_SPEED)
             else:
-                ship.move(ship.x, 0)
+                ship.move(ship.x, constants.SPRITE_SIZE)
         if keys & ugame.K_DOWN:
             # Moves down with constraints of the ground
             if ship.y <= constants.SCREEN_Y - 2 * constants.SPRITE_SIZE:
